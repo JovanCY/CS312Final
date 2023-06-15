@@ -6,7 +6,7 @@ provider "aws" {
 # Provision EC2 instance
 resource "aws_instance" "minecraft_server" {
   ami           = "ami-076bca9dd71a9a578" # Update with your desired AMI ID
-  instance_type = "t3.medium" # Update with your desired instance type
+  instance_type = "t3.medium"             # Update with your desired instance type
 
   # Configure security group
   vpc_security_group_ids = [aws_security_group.minecraft_server.id]
@@ -37,9 +37,9 @@ resource "aws_security_group" "minecraft_server" {
 
 
   egress {
-    from_port  = 0
-    to_port    = 0
-    protocol   = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -48,7 +48,7 @@ resource "aws_security_group" "minecraft_server" {
 
 resource "tls_private_key" "minecraft-server-jo" {
   algorithm = "RSA"
-  rsa_bits = 2048
+  rsa_bits  = 2048
 }
 
 resource "aws_key_pair" "minecraft-server-jo" {
@@ -56,18 +56,18 @@ resource "aws_key_pair" "minecraft-server-jo" {
   public_key = tls_private_key.minecraft-server-jo.public_key_openssh
 
   provisioner "local-exec" {
-  command = "echo '${tls_private_key.minecraft-server-jo.private_key_pem}' > minecraft.pem"
-}
+    command = "echo '${tls_private_key.minecraft-server-jo.private_key_pem}' > minecraft.pem"
+  }
 }
 
 output "public_ip" {
-    value = aws_instance.minecraft_server.public_ip
+  value = aws_instance.minecraft_server.public_ip
 }
 
 output "public_dns" {
-    value = aws_instance.minecraft_server.public_dns
+  value = aws_instance.minecraft_server.public_dns
 }
 
 output "port" {
-    value = "25565"
+  value = "25565"
 }
